@@ -1,0 +1,55 @@
+.main-form__option-container {
+  background-color: #2d2e31;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  white-space: nowrap;
+  gap: 10px;
+}
+
+.main-form__option-container label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.main-form__option-container img {
+  display: block;
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.main-form__generate-button {
+  background-color: #2d2e31;
+  color: #e7eae6;
+  border: none;
+  margin: 0;
+  padding: 12px 10px 12px 0;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: color 200ms;
+}
+.main-form__generate-button:hover {
+  color: gray;
+}
+
+.main-form__option-container {
+  padding-left: 5px;
+}
+
+@media (max-width: 470px) {
+  .main-form__option-container {
+    padding: 10px 10px;
+  }
+}
+
+@media (max-width: 769px) {
+  .main-form__option-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}

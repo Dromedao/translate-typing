@@ -1,0 +1,88 @@
+.main-div {
+  background-color: #2d2e31;
+  width: 70lvw;
+  height: 30lvh;
+  border-radius: 5px;
+}
+.main-input {
+  opacity: 0;
+  position: absolute;
+}
+ .correct {
+  color: #959ba1;
+}
+ 
+.incorrect {
+  color: red;
+}
+
+.text-output {
+  font-size: 2rem;
+  margin: 0px 10px;
+  color: #555;
+  position: relative;
+  width: 70lvw;
+}
+
+.text-output > *:not(.no-text){
+  position: relative;
+}
+
+.text-output > *:not(.no-text)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 2px; 
+  height: 2rem; 
+  background-color: #959ba1;
+  transform: translateY(-50%);
+  animation: blink 0.5s step-end infinite;
+}
+
+.current-char {
+  position: relative;
+}
+
+.no-text::after{
+  display: none;
+}
+
+.current-char::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 2px; 
+  height: 20px; 
+  background-color: #959ba1; 
+  transform: translateY(-50%);
+}
+
+.pass-character::after {
+  display: none; 
+}
+
+.main-form__appointment{
+  text-align: center;
+}
+
+@media (max-width: 769px){
+  .main-div{
+    width: 90lvw;
+    height: 50lvh;
+  }
+  .text-output {
+    width: 90lvw;
+  }
+}
+
+@keyframes blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,53 @@
+.main-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3lvh;
+}
+
+.main-form__input {
+    font-size: 2rem;
+    color: #959ba1;
+    border: none;
+    background-color: transparent;
+    background-color: #2d2e31;
+    width: 70vw;
+    height: 28vh;
+    border-radius: 5px; 
+    resize: none;
+    padding: 5px 10px;
+}
+
+
+.main-form__input:focus {
+    outline: none;
+}
+
+.main-form__option-container label{
+    display: flex;
+}
+
+.main-form__appointment{
+    text-align: center;
+}
+
+.send-btn{
+    width: 20%;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 250ms;
+}
+.send-btn:hover{
+    background-color: gray;
+}
+
+@media (max-width: 769px){
+    .main-form__input {
+      width: 90lvw;
+    }
+    .send-btn{
+        width: 40%;
+    }
+  }
