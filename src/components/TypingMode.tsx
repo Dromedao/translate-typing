@@ -8,13 +8,19 @@ type TypingMode = {
   selectedLevel: string;
   phrase: string;
   translatedPhrase: string;
-}
+};
 
-export default function TypingMode({selectedLanguageFrom, selectedLanguageTo, selectedLevel, phrase, translatedPhrase} : TypingMode) {
+export default function TypingMode({
+  selectedLanguageFrom,
+  selectedLanguageTo,
+  selectedLevel,
+  phrase,
+  translatedPhrase,
+}: TypingMode) {
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(true);
 
-  const [timeStart, setTimeStart] = useState<number | null>(null); // Estado para tiempo inicial
+  const [timeStart, setTimeStart] = useState<number | null>(null);
   const [timeFinish, setTimeFinish] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -22,17 +28,19 @@ export default function TypingMode({selectedLanguageFrom, selectedLanguageTo, se
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.target.value;
-    // RECUERDA AÑADIR ESPACIO AL FINAL DE CADA FRASE GENERADA
-    // console.log(userInput);
-
     if (userInput.length > translatedPhrase.length || showModal) {
       return;
     }
 
     setText(e.target.value);
 
-    if (userInput[userInput.length - 1] !== translatedPhrase[userInput.length - 1]) {
-      console.log(userInput[userInput.length - 1], translatedPhrase[userInput.length - 1])
+    if (
+      userInput[userInput.length - 1] !== translatedPhrase[userInput.length - 1]
+    ) {
+      console.log(
+        userInput[userInput.length - 1],
+        translatedPhrase[userInput.length - 1]
+      );
       setTimeFinish(Date.now());
       setShowModal(true);
     }
@@ -53,7 +61,6 @@ export default function TypingMode({selectedLanguageFrom, selectedLanguageTo, se
     }
   };
 
-
   return (
     <>
       <p className={TypingModeCss["main-form__appointment"]}>«{phrase}»</p>
@@ -64,8 +71,8 @@ export default function TypingMode({selectedLanguageFrom, selectedLanguageTo, se
           onChange={handleChange}
           type="text"
           value={text}
-          onFocus={() => setIsFocused(true)} 
-          onBlur={() => setIsFocused(false)} 
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           autoFocus
         />
         <p className={TypingModeCss["text-output"]}>
@@ -80,7 +87,11 @@ export default function TypingMode({selectedLanguageFrom, selectedLanguageTo, se
                   : isFocused && index === text.length
                   ? TypingModeCss["caret-container"]
                   : TypingModeCss["no-text"]
-              } ${index === text.length ? TypingModeCss["current-char"] : TypingModeCss["pass-character"]}`}
+              } ${
+                index === text.length
+                  ? TypingModeCss["current-char"]
+                  : TypingModeCss["pass-character"]
+              }`}
             >
               {index < text.length && text[index] !== char
                 ? text[index] == " "

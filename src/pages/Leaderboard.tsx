@@ -1,7 +1,6 @@
-import LeaderboardCss from "../styles/Leaderboard.module.css"
+import LeaderboardCss from "../styles/Leaderboard.module.css";
 
 export default function Leaderboard() {
-
   return (
     <main className={LeaderboardCss["main-leaderboard"]}>
       <h1>Leaderboard</h1>
@@ -9,4 +8,3 @@ export default function Leaderboard() {
     </main>
   );
 }
-

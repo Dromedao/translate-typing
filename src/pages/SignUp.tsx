@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SignUpCss from "../styles/SignUp.module.css";
 import FormCss from "../styles/Form.module.css";
 import ReCAPTCHA from "react-google-recaptcha";
+import { API_URL } from "../config/apiConfig";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -43,10 +44,11 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/users/register", {
+      const response = await fetch(`${API_URL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           username: formData.username,
@@ -122,13 +124,13 @@ export default function SignUp() {
             value={formData.confirmPassword}
             onChange={handleChange}
           />
-          
-            <ReCAPTCHA
+
+          <ReCAPTCHA
             className={FormCss["g-recaptcha"]}
-              sitekey="6LeI644qAAAAAIs0jtKxxo8XjGliw24uQq9WULlt"
-              onChange={handleCaptchaChange}
-              theme="dark"
-            />
+            sitekey="6LeI644qAAAAAIs0jtKxxo8XjGliw24uQq9WULlt"
+            onChange={handleCaptchaChange}
+            theme="dark"
+          />
 
           {errorMessage && (
             <p className={FormCss["error-message"]}>{errorMessage}</p>

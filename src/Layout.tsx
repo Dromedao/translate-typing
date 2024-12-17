@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
+import { API_URL } from "./config/apiConfig";
 
 export default function Layout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,9 +10,13 @@ export default function Layout() {
   const location = useLocation();
   const checkAuthentication = async () => {
     try {
-      const response = await fetch("http://localhost:4000/users/profile", {
+      const response = await fetch(`${API_URL}/users/profile`, {
         method: "GET",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
+        },
       });
 
       if (!response.ok) {

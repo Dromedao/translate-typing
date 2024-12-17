@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginCss from "../styles/Login.module.css";
 import FormCss from "../styles/Form.module.css";
+import { API_URL } from "../config/apiConfig";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -23,23 +24,24 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:4000/users/login", {
+      const response = await fetch(`${API_URL}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
         },
         body: JSON.stringify({
           username: formData.username,
           password: formData.password,
         }),
-        credentials: "include"
+        credentials: "include",
       });
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         const errorText = errorData?.error || "Invalid credentials";
         throw new Error(errorText);
       }
-        navigate("/"); 
+      navigate("/");
     } catch (error) {
       setErrorMessage("Failed to login. Please try again later.");
     }

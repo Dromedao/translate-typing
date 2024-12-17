@@ -71,6 +71,20 @@
   color: white;
 }
 
+.logout-btn {
+  border: none;
+  background-color: #444;
+  padding: 10px 20px;
+  border-radius: 5px;
+  /* margin-top: 10px; */
+  margin: 20px 0;
+}
+
+.logout-btn:hover {
+  background-color: #777;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr; 

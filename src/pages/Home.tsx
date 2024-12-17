@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-
-import TranslateMode from "../components/TranslateMode";
+import TranslationMode from "../components/TranslationMode";
 import TypingMode from "../components/TypingMode";
 import OptionsBar from "../components/OptionsBar";
-
 import HomeCss from "../styles/Home.module.css";
-
 import { DefaultPhrases } from "../components/DefaultPhrases";
-
 import GithubMark from "../assets/github-mark.svg";
 
 export default function Home() {
   // 0: TypingMode
   // 1: TranslateMode
   const [mode, setMode] = useState(0);
+  const [translateTimeStart, setTranslateTimeStart] = useState<number | null>(
+    null
+  );
 
   const [selectedLanguageFrom, setSelectedLanguageFrom] = useState("english");
   const [selectedLanguageTo, setSelectedLanguageTo] = useState("spanish");
@@ -62,7 +61,7 @@ export default function Home() {
             }`}
             onClick={() => setMode(1)}
           >
-            Translate Mode
+            Translation Mode
           </button>
         </div>
         <OptionsBar
@@ -75,13 +74,16 @@ export default function Home() {
             setPhrase,
             setTranslatedPhrase,
           ]}
+          setTranslateTimeStart={setTranslateTimeStart}
         />
         {mode ? (
-          <TranslateMode
+          <TranslationMode
             phrase={phrase}
             selectedLanguageFrom={selectedLanguageFrom}
             selectedLanguageTo={selectedLanguageTo}
             selectedLevel={selectedLevel}
+            timeStart={Number(translateTimeStart)}
+            setTimeStart={setTranslateTimeStart}
           />
         ) : (
           <TypingMode
@@ -93,8 +95,11 @@ export default function Home() {
           />
         )}
       </main>
-      <a style={{position: "absolute", bottom: "10px", right: "20px"}} href="https://github.com/Dromedao">
-        <img style={{width: "50px"}} src={GithubMark} alt="" />
+      <a
+        style={{ position: "absolute", bottom: "10px", right: "20px" }}
+        href="https://github.com/Dromedao/translate-typing/"
+      >
+        <img style={{ width: "50px" }} src={GithubMark} alt="" />
       </a>
     </>
   );

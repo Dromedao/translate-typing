@@ -1,32 +1,31 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ModalList from "./ModalList";
-
 import TextFields from "../assets/text_fields.svg";
 import Segment from "../assets/segment.svg";
 import Star from "../assets/star.svg";
 import Restart from "../assets/restart.svg";
-
 import OptionsBarCss from "../styles/OptionsBar.module.css";
-
-// import { DefaultPhrases as CannotFetchDatabase } from "./DefaultPhrases";
 import { CannotFetchDatabase } from "./CannotFetchDatabase";
+import { API_URL } from "../config/apiConfig";
 
 type OptionsBarProps = {
   typingMode: boolean;
   vars: string[];
   setVars: Dispatch<SetStateAction<string>>[];
+  setTranslateTimeStart?: Dispatch<SetStateAction<number | null>>;
 };
 
 export default function OptionsBar({
   typingMode,
   vars,
   setVars,
+  setTranslateTimeStart,
 }: OptionsBarProps) {
   const languages = [
     "english",
     "spanish",
     "french",
-    "arab",
+    "arabic",
     "italian",
     "chinese",
     "korean",
@@ -36,91 +35,28 @@ export default function OptionsBar({
     "hindi",
     "portuguese",
     "japanese",
+    "russian",
   ];
-  const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+  // const levels = ["A1", "A2", "B1", "B2", "C1", "C2"];
+  const levels = ["A1", "A2", "B1", "B2"];
 
-  // const handleGeneratePhrase = async () => {
-  //   if (!vars[0] || !vars[2]) {
-  //     console.error("Missing language or level!");
-  //     return;
-  //   }
-
-  //   const res = await fetch("http://localhost:4000/multilingual-phrases/", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       language: vars[0],
-  //       level: vars[2],
-  //     }),
-  //     credentials: "include",
-  //   });
-
-  //   // console.log(res);
-  //   const data = await res.json();
-
-  //   if (res.ok) {
-  //     const indexPhrase = Math.floor(Math.random() * data.length);
-  //     setVars[3](data[indexPhrase].phrase);
-
-  //     if (typingMode) {
-  //       const res2 = await fetch(
-  //         "http://localhost:4000/multilingual-phrases/",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({
-  //             language: vars[1],
-  //             level: vars[2],
-  //           }),
-  //           credentials: "include",
-  //         }
-  //       );
-  //       const data2 = await res2.json();
-  //       if (res2.ok) {
-  //         setVars[4](data2[indexPhrase].phrase);
-  //       }
-  //     }
-  //   } else {
-  //     console.error(
-  //       "Error looking for a phrase:",
-  //       data.error || "Unknown error"
-  //     );
-  //   }
-  // };
-
-  // const [phrase, setPhrase] = useState(
-  //   "Click the button to generate a new phrase"
-  // );
-
-  // const [translatedPhrase, setTranslatedPhrase] = useState(
-  //   "Haga clic en el botón para generar una nueva frase"
-  // );
-
-  // [
-  //   setSelectedLanguageFrom,
-  //   setSelectedLanguageTo,
-  //   setSelectedLevel,
-  //   setPhrase,
-  //   setTranslatedPhrase,
-  // ]
-  //[selectedLanguageFrom, selectedLanguageTo, selectedLevel]
-  const [errorFetchPhrase, setErrorFetchPhrase] = useState(false)
+  const [errorFetchPhrase, setErrorFetchPhrase] = useState(false);
   useEffect(() => {
     if (vars[0] in CannotFetchDatabase) {
-      setVars[3](CannotFetchDatabase[vars[0] as keyof typeof CannotFetchDatabase]);
+      setVars[3](
+        CannotFetchDatabase[vars[0] as keyof typeof CannotFetchDatabase]
+      );
     } else {
       setVars[3]("");
     }
     if (vars[1] in CannotFetchDatabase) {
-      setVars[4](CannotFetchDatabase[vars[1] as keyof typeof CannotFetchDatabase]);
+      setVars[4](
+        CannotFetchDatabase[vars[1] as keyof typeof CannotFetchDatabase]
+      );
     } else {
       setVars[4]("");
     }
-    setErrorFetchPhrase(false)
+    setErrorFetchPhrase(false);
   }, [errorFetchPhrase]);
 
   const handleGeneratePhrase = async () => {
@@ -129,11 +65,11 @@ export default function OptionsBar({
         console.error("Missing language or level!");
         return;
       }
-
-      const res = await fetch("http://localhost:4000/multilingual-phrases/", {
+      const res = await fetch(`${API_URL}/multilingual-phrases/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           language: vars[0],
@@ -155,20 +91,18 @@ export default function OptionsBar({
       setVars[3](data[indexPhrase]?.phrase || "No phrase available");
 
       if (typingMode) {
-        const res2 = await fetch(
-          "http://localhost:4000/multilingual-phrases/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              language: vars[1],
-              level: vars[2],
-            }),
-            credentials: "include",
-          }
-        );
+        const res2 = await fetch(`${API_URL}/multilingual-phrases/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-Requested-With': 'fetch',
+          },
+          body: JSON.stringify({
+            language: vars[1],
+            level: vars[2],
+          }),
+          credentials: "include",
+        });
 
         if (!res2.ok) {
           // Manejo de error de respuesta para la segunda petición
@@ -179,16 +113,20 @@ export default function OptionsBar({
             }`
           );
         }
-
         const data2 = await res2.json();
         setVars[4](data2[indexPhrase]?.phrase || "No phrase available");
+      } else {
+        //Translate Mode
+        if (setTranslateTimeStart) {
+          setTranslateTimeStart(Date.now());
+        }
       }
     } catch (error) {
       // Manejo de errores generales (excepciones)
       //language: vars[0],
       //level: vars[2],
       setErrorFetchPhrase(true);
-      console.error("An error occurred:", error);
+      // console.error("An error occurred:", error);
     }
   };
 

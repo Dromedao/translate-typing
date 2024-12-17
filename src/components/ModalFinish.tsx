@@ -1,11 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ModalFinishCss from "../styles/ModalFinish.module.css";
 import ReCAPTCHA from "react-google-recaptcha";
+import { API_URL } from "../config/apiConfig";
 
 type User = {
-  id: string;
   username: string;
-  email: string;
   avg_wpm: Number;
   avg_typing_accuracy: Number;
   avg_translate_accuracy: Number;
@@ -53,7 +52,13 @@ export default function ModalFinish({
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<string[]>([]);
-  const [accuracy, setAccuracy] = useState<number | null>(null);
+  const [translationAccuracy, setTranslationAccuracy] = useState<number | null>(
+    null
+  );
+  const [typingAccuracy, setTypingAccuracy] = useState<string | null>(null);
+  const [idTypingTest, setIdTypingTest] = useState("");
+  const [idTranslateTest, setIdTranslateTest] = useState("");
+  const totalTime = ((time_finish - time_start) / 1000).toFixed(2);
 
   const handleCaptchaChange = (value: string | null) => {
     setCaptchaValue(value);
@@ -65,7 +70,7 @@ export default function ModalFinish({
     if (setMistakes) {
       setMistakes(0);
     }
-    setTimeStart(null);
+    setTimeStart(Date.now());
     setTimeFinish(null);
     setText("");
     if (handleClickOutside) {
@@ -74,8 +79,8 @@ export default function ModalFinish({
   };
 
   const handleUpdateTranslateStats = async () => {
-    if (!user?.id) {
-      console.error("User ID is not available");
+    if (!user) {
+      console.error("Useris not available");
       return;
     }
 
@@ -84,16 +89,17 @@ export default function ModalFinish({
     const totalTranslateTests = Number(user.total_translate_tests) || 0;
 
     try {
-      const res = await fetch("http://localhost:4000/users/translate-stats/", {
+      const res = await fetch(`${API_URL}/users/translate-stats/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
         },
         body: JSON.stringify({
           username: user.username,
           avg_translate_accuracy: Math.round(
             (avgTranslateAccuracy * totalTranslateTests +
-              Math.round(Number(accuracy))) /
+              Math.round(Number(translationAccuracy))) /
               (totalTranslateTests + 1)
           ),
           total_translate_tests: totalTranslateTests + 1,
@@ -110,8 +116,8 @@ export default function ModalFinish({
   };
 
   const handleUpdateTypingStats = async () => {
-    if (!user?.id) {
-      console.error("User ID is not available");
+    if (!user) {
+      console.error("User is not available");
       return;
     }
 
@@ -119,24 +125,36 @@ export default function ModalFinish({
     const totalTypingTests = Number(user.total_typing_tests) || 0;
     const avgWPM = Math.round(Number(user.avg_wpm)) || 0;
 
+    let calculatedAccuracy = Number(
+      calculateTypingAccuracy(realText, userText)
+    );
+    let calculatedWPM = Number(
+      calculateWPM(realText, userText, Number(totalTime))
+    );
+
+    if (isNaN(calculatedAccuracy)) {
+      calculatedAccuracy = 0;
+    }
+    if (isNaN(calculatedWPM)) {
+      calculatedWPM = 0;
+    }
+
     try {
-      const res = await fetch("http://localhost:4000/users/typing-stats/", {
+      const res = await fetch(`${API_URL}/users/typing-stats/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
         },
         body: JSON.stringify({
           username: user.username,
           avg_typing_accuracy: Math.round(
             (avgTypingAccuracy * totalTypingTests +
-              Math.round(Number(calculateAccuracy(realText, userText)))) /
+              Math.round(calculatedAccuracy)) /
               (totalTypingTests + 1)
           ),
           avg_wpm: Math.round(
-            (avgWPM * totalTypingTests +
-              Math.round(
-                Number(calculateWPM(realText, userText, Number(totalTime)))
-              )) /
+            (avgWPM * totalTypingTests + Math.round(calculatedWPM)) /
               (totalTypingTests + 1)
           ),
           total_typing_tests: totalTypingTests + 1,
@@ -152,11 +170,11 @@ export default function ModalFinish({
     }
   };
 
-  const handleSaveTest = async () => {
-    if (!user?.id) {
-      console.error("User ID is not available");
-      return;
-    }
+  const handleSaveTypingTest = async () => {
+    // if (!user?.id) {
+    //   console.error("User ID is not available");
+    //   return;
+    // }
 
     if (!realText || !userText || !totalTime) {
       console.error("Missing test data: realText, userText, or totalTime");
@@ -164,15 +182,16 @@ export default function ModalFinish({
     }
 
     try {
-      const res = await fetch("http://localhost:4000/typing-tests/", {
+      const res = await fetch(`${API_URL}/typing-tests/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
         },
         body: JSON.stringify({
-          user_id: user.id.toString(),
+          // user_id: user.id.toString(),
           wpm: calculateWPM(realText, userText, Number(totalTime)),
-          accuracy: calculateAccuracy(realText, userText),
+          accuracy: calculateTypingAccuracy(realText, userText),
           test_duration: totalTime,
           language_from: languageFrom,
           language_to: languageTo,
@@ -182,10 +201,87 @@ export default function ModalFinish({
       });
 
       if (res.ok) {
+        const data = await res.json();
+        setIdTypingTest(data.id);
+
         setSaved(true);
         console.log("Test saved successfully");
 
-        await handleUpdateTypingStats();
+        // await handleUpdateTypingStats();
+      } else {
+        const data = await res.json();
+        console.error("Error saving test:", data.error || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
+  };
+
+  const handleDeleteTypingTest = async () => {
+    if (!user) {
+      console.error("User is not available");
+      return;
+    }
+
+    if (!idTypingTest) {
+      console.error("Missing test data: idTypingTest");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/typing-tests/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
+        },
+        body: JSON.stringify({
+          id: idTypingTest,
+        }),
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setSaved(false);
+        console.log("Test deleted successfully");
+      } else {
+        const data = await res.json();
+        console.error("Error saving test:", data.error || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
+  };
+
+  const handleDeleteTranslateTest = async () => {
+    if (!user) {
+      console.error("User is not available");
+      return;
+    }
+
+    if (!idTranslateTest) {
+      console.error("Missing test data: idTranslateTest");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/translation-tests/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
+        },
+        body: JSON.stringify({
+          id: idTranslateTest,
+        }),
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setSaved(false);
+        console.log("Test deleted successfully");
+
+        // await handleUpdateTypingStats();
       } else {
         const data = await res.json();
         console.error("Error saving test:", data.error || "Unknown error");
@@ -196,9 +292,8 @@ export default function ModalFinish({
   };
 
   const handleSaveTranslationTest = async () => {
-    if (!user?.id) {
-      console.log(user?.id);
-      console.error("User ID is not available");
+    if (!user) {
+      console.error("User is not available");
       return;
     }
 
@@ -208,28 +303,29 @@ export default function ModalFinish({
     }
 
     try {
-      const res = await fetch("http://localhost:4000/translation-tests/", {
+      const res = await fetch(`${API_URL}/translation-tests/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
         },
         body: JSON.stringify({
-          user_id: user.id.toString(),
-          phrase: realText,
+          // user_id: user.id.toString(),
+          phrase_text: realText,
           user_translation: userText,
-          accuracy: accuracy,
+          accuracy: translationAccuracy,
           test_duration: totalTime,
-          language_from: languageFrom,
-          language_to: languageTo,
-          level: level,
+          // language_from: languageFrom,
+          language_to_name: languageTo,
+          level_name: level,
         }),
         credentials: "include",
       });
 
       if (res.ok) {
+        const data = await res.json();
+        setIdTranslateTest(data.id);
         setSaved(true);
-        console.log("Saved");
-        await handleUpdateTranslateStats();
       } else {
         const data = await res.json();
         console.error("Error saving test:", data.error || "Unknown error");
@@ -239,9 +335,10 @@ export default function ModalFinish({
     }
   };
 
-  const totalTime = ((time_finish - time_start) / 1000).toFixed(2);
-
-  const calculateAccuracy = (targetText: string, userText: string): string => {
+  const calculateTypingAccuracy = (
+    targetText: string,
+    userText: string
+  ): string => {
     let numberCorrectCharacters = 0;
 
     for (let i = 0; i < userText.length; i++) {
@@ -277,15 +374,16 @@ export default function ModalFinish({
     return Math.round(wpm);
   };
 
-  const calculateAccuracyTranslation = async (
+  const calculateTranslationAccuracy = async (
     targetText: string,
     userText: string
   ) => {
     try {
-      const res = await fetch("http://localhost:4000/translate/", {
+      const res = await fetch(`${API_URL}/translate/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
         },
         body: JSON.stringify({
           originalText: targetText,
@@ -301,10 +399,10 @@ export default function ModalFinish({
       }
 
       const data = await res.json();
-      setAccuracy(data.accuracy);
+      setTranslationAccuracy(data.accuracy);
       setErrors(data.errors || []);
     } catch (error) {
-      setAccuracy(-1);
+      setTranslationAccuracy(-1);
       setErrors([
         "An issue occurred while calculating accuracy. Please try again later.",
         "Ha ocurrido un problema al calcular la presición. Por favor intentelo más tarde.",
@@ -314,55 +412,62 @@ export default function ModalFinish({
     }
   };
 
-  useEffect(() => {
-    if (captchaValue) {
-      calculateAccuracyTranslation(realText, userText);
-    }
-  }, [captchaValue]);
-
-  const getUserById = async (id: string) => {
+  const getUserInfo = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/users/${id}`, {
+      const res = await fetch(`${API_URL}/users/info`, {
         method: "GET",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          'X-Requested-With': 'fetch',
+        },
       });
 
-      if (!res.ok) {
-        throw new Error("Error al obtener los datos del usuario por ID");
-      }
-
+      
       const data = await res.json();
       setUser(data);
-      console.log(data);
     } catch (error) {
-      console.error(`Error fetching user by ID: ${error}`);
+      console.error(error);
+    } finally {
+      // const updateUserStats = async () => {
+      //   if (typingTest) {
+      //     await handleUpdateTypingStats();
+      //   } else {
+      //   }
+      // };
+      // updateUserStats();
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const res = await fetch(`http://localhost:4000/users/profile`, {
-          method: "GET",
-          credentials: "include",
-        });
+    if (captchaValue) {
+      calculateTranslationAccuracy(realText, userText);
+    }
+  }, [captchaValue]);
 
-        if (!res.ok) {
-          throw new Error("Error al obtener el perfil del usuario");
-        }
-
-        const data = await res.json();
-        if (data?.id) {
-          await getUserById(data.id);
-        }
-      } catch (error) {
-        console.log(`Error fetching user profile: ${error}`);
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+    const updateUserStats = async () => {
+      if (typingTest) {
+        await handleUpdateTypingStats();
+      } else {
+        await handleUpdateTranslateStats();
       }
     };
+    updateUserStats();
+  }, [user]);
 
-    fetchUserProfile();
+  useEffect(() => {
+    if (typingTest) {
+      setTypingAccuracy(calculateTypingAccuracy(realText, userText));
+    }
+    const updateUserStats = async () => {
+      if (typingTest) {
+        await handleUpdateTypingStats();
+      }
+    };
+    getUserInfo();
+    updateUserStats();
   }, []);
 
   if (loading) {
@@ -379,19 +484,29 @@ export default function ModalFinish({
           ></div>
           <div className={ModalFinishCss["modal__content"]}>
             <h2 style={{ padding: 0, margin: 0 }}>Finish test!</h2>
-            <p>Accuracy: {calculateAccuracy(realText, userText)}%</p>
+            <p>Accuracy: {typingAccuracy}%</p>
             <p>Total time: {totalTime} [s]</p>
-            <p>WPM: {calculateWPM(realText, userText, Number(totalTime))}</p>
+            <p>
+              WPM:{" "}
+              {isNaN(calculateWPM(realText, userText, Number(totalTime)))
+                ? "0%"
+                : calculateWPM(realText, userText, Number(totalTime))}
+            </p>
             {user ? (
               !saved ? (
                 <button
                   className={ModalFinishCss["modal__btn"]}
-                  onClick={handleSaveTest}
+                  onClick={handleSaveTypingTest}
                 >
                   Save test
                 </button>
               ) : (
-                <p>Saved</p>
+                <button
+                  className={ModalFinishCss["modal__btn"]}
+                  onClick={handleDeleteTypingTest}
+                >
+                  Delete test
+                </button>
               )
             ) : (
               <p>Login to save tests</p>
@@ -415,7 +530,9 @@ export default function ModalFinish({
               ) : (
                 <p>
                   Accuracy:{" "}
-                  {accuracy !== null ? `${accuracy}%` : "Calculating..."}
+                  {translationAccuracy !== null
+                    ? `${translationAccuracy}%`
+                    : "Calculating..."}
                 </p>
               )}
             </p>
@@ -444,7 +561,12 @@ export default function ModalFinish({
                   Save test
                 </button>
               ) : (
-                <p>Saved</p>
+                <button
+                  className={ModalFinishCss["modal__btn"]}
+                  onClick={handleDeleteTranslateTest}
+                >
+                  Delete test
+                </button>
               )
             ) : (
               <p>Login to save tests</p>
