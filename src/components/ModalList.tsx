@@ -1,5 +1,6 @@
 import { useState, SetStateAction, Dispatch, useRef } from "react";
 import ModalListCss from "../styles/ModalList.module.css";
+import { useTranslation } from "react-i18next";
 
 interface ModalProps {
   title: string;
@@ -7,6 +8,7 @@ interface ModalProps {
   setVar: Dispatch<SetStateAction<string>>;
   image: string;
   uniqueId: string;
+  changeLanguage?: boolean;
 }
 
 export default function ModalList({
@@ -15,11 +17,22 @@ export default function ModalList({
   setVar,
   image,
   uniqueId,
+  changeLanguage,
 }: ModalProps) {
   const [modal, setModal] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const toggleModal = () => {
     setModal(!modal);
+  };
+
+  const { i18n } = useTranslation();
+  const changeLanguageFunc = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
+  // Se ha cambiado a un evento para que al hacer clic en la imagen también se abra el modal
+  const handleImageClick = () => {
+    toggleModal();
   };
 
   const handleDivClick = () => {
@@ -31,13 +44,18 @@ export default function ModalList({
   return (
     <>
       <div className={ModalListCss["container-btn"]} onClick={handleDivClick}>
-        <label htmlFor={`button-${uniqueId}`}>
-          <img src={image} alt="" />
-        </label>
+        {/* Usar un evento en la imagen directamente */}
+        <img
+          style={{ width: "25px" }}
+          src={image}
+          alt=""
+          onClick={handleImageClick} // Activar el modal al hacer clic en la imagen
+        />
         <button
+          translate="no"
           ref={buttonRef}
           id={`button-${uniqueId}`}
-          onClick={toggleModal}
+          onClick={toggleModal} // Se mantiene la funcionalidad de abrir modal al hacer clic en el botón
           className={ModalListCss["btn-modal"]}
         >
           {title}
@@ -54,9 +72,13 @@ export default function ModalList({
             <ul className={ModalListCss["modal__list"]}>
               {items.map((element) => (
                 <li
+                  translate="no"
                   className={ModalListCss["modal__li"]}
                   key={element}
                   onClick={() => {
+                    if (changeLanguage) {
+                      changeLanguageFunc(element);
+                    }
                     setVar(element);
                     toggleModal();
                   }}

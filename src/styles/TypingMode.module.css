@@ -1,6 +1,6 @@
 .main-div {
   background-color: #2d2e31;
-  width: 70lvw;
+  /* width: 100%; */
   height: 30lvh;
   border-radius: 5px;
 }

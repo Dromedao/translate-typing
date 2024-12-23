@@ -4,6 +4,7 @@ import SignUpCss from "../styles/SignUp.module.css";
 import FormCss from "../styles/Form.module.css";
 import ReCAPTCHA from "react-google-recaptcha";
 import { API_URL } from "../config/apiConfig";
+import { useTranslation } from "react-i18next";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export default function SignUp() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const handleCaptchaChange = (value: string | null) => {
     setCaptchaValue(value);
   };
@@ -74,15 +75,15 @@ export default function SignUp() {
     <>
       <article className={SignUpCss["register"]}>
         <form onSubmit={handleSubmit} className={FormCss["form"]}>
-          <h1 className={FormCss["form__title"]}>Register</h1>
-          <label htmlFor="username">Username</label>
+          <h1 className={FormCss["form__title"]}>{t("register")}</h1>
+          <label htmlFor="username">{t("username")}</label>
           <input
             id="username"
             name="username"
             className={FormCss["form__input"]}
             type="text"
             minLength={3}
-            placeholder="Username"
+            placeholder={t("username-placeholder")}
             value={formData.username}
             onChange={handleChange}
           />
@@ -100,25 +101,25 @@ export default function SignUp() {
             onChange={handleChange}
           />
 
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t("password")}</label>
           <input
             id="password"
             name="password"
             className={FormCss["form__input"]}
             type="password"
-            placeholder="Password"
+            placeholder={t("password-placeholder")}
             minLength={6}
             maxLength={20}
             value={formData.password}
             onChange={handleChange}
           />
-          <label htmlFor="confirm-password">Confirm password</label>
+          <label htmlFor="confirm-password">{t("password-confirm")}</label>
           <input
             id="confirm-password"
             name="confirmPassword"
             className={FormCss["form__input"]}
             type="password"
-            placeholder="Confirm Password"
+            placeholder={t("password-placeholder")}
             minLength={6}
             maxLength={20}
             value={formData.confirmPassword}
@@ -137,10 +138,10 @@ export default function SignUp() {
           )}
 
           <button className={FormCss["form__button"]} type="submit">
-            Send
+            {t("send")}
           </button>
           <p>
-            Do you have an account? <Link to="/login">Click here to login</Link>
+            {t("have-account")} <Link to="/login">{t("click-login")}</Link>
           </p>
         </form>
       </article>

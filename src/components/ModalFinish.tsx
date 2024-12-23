@@ -80,20 +80,18 @@ export default function ModalFinish({
 
   const handleUpdateTranslateStats = async () => {
     if (!user) {
-      console.error("Useris not available");
+      // console.error("Useris not available");
       return;
     }
-
     const avgTranslateAccuracy =
       Math.round(Number(user.avg_translate_accuracy)) || 0;
     const totalTranslateTests = Number(user.total_translate_tests) || 0;
-
     try {
       const res = await fetch(`${API_URL}/users/translate-stats/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           username: user.username,
@@ -108,19 +106,18 @@ export default function ModalFinish({
       });
 
       if (res.ok) {
-        console.log("Translation stats updated successfully");
+      //   console.log("Translation stats updated successfully");
       }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // console.error("Error during fetch:", error);
     }
   };
 
   const handleUpdateTypingStats = async () => {
     if (!user) {
-      console.error("User is not available");
+      // console.error("User is not available");
       return;
     }
-
     const avgTypingAccuracy = Math.round(Number(user.avg_typing_accuracy)) || 0;
     const totalTypingTests = Number(user.total_typing_tests) || 0;
     const avgWPM = Math.round(Number(user.avg_wpm)) || 0;
@@ -144,7 +141,7 @@ export default function ModalFinish({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           username: user.username,
@@ -163,10 +160,10 @@ export default function ModalFinish({
       });
 
       if (res.ok) {
-        console.log("Saved");
+      //   console.log("Saved");
       }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // console.error("Error during fetch:", error);
     }
   };
 
@@ -177,7 +174,7 @@ export default function ModalFinish({
     // }
 
     if (!realText || !userText || !totalTime) {
-      console.error("Missing test data: realText, userText, or totalTime");
+      // console.error("Missing test data: realText, userText, or totalTime");
       return;
     }
 
@@ -186,7 +183,7 @@ export default function ModalFinish({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           // user_id: user.id.toString(),
@@ -203,28 +200,25 @@ export default function ModalFinish({
       if (res.ok) {
         const data = await res.json();
         setIdTypingTest(data.id);
-
         setSaved(true);
-        console.log("Test saved successfully");
-
-        // await handleUpdateTypingStats();
-      } else {
-        const data = await res.json();
-        console.error("Error saving test:", data.error || "Unknown error");
-      }
+      } 
+      // else {
+        // const data = await res.json();
+        // console.error("Error saving test:", data.error || "Unknown error");
+      // }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // console.error("Error during fetch:", error);
     }
   };
 
   const handleDeleteTypingTest = async () => {
     if (!user) {
-      console.error("User is not available");
+      // console.error("User is not available");
       return;
     }
 
     if (!idTypingTest) {
-      console.error("Missing test data: idTypingTest");
+      // console.error("Missing test data: idTypingTest");
       return;
     }
 
@@ -233,7 +227,7 @@ export default function ModalFinish({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           id: idTypingTest,
@@ -243,24 +237,24 @@ export default function ModalFinish({
 
       if (res.ok) {
         setSaved(false);
-        console.log("Test deleted successfully");
-      } else {
-        const data = await res.json();
-        console.error("Error saving test:", data.error || "Unknown error");
-      }
+      } 
+      // else {
+      //   const data = await res.json();
+        // console.error("Error saving test:", data.error || "Unknown error");
+      // }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // console.error("Error during fetch:", error);
     }
   };
 
   const handleDeleteTranslateTest = async () => {
     if (!user) {
-      console.error("User is not available");
+      // console.error("User is not available");
       return;
     }
 
     if (!idTranslateTest) {
-      console.error("Missing test data: idTranslateTest");
+      // console.error("Missing test data: idTranslateTest");
       return;
     }
 
@@ -269,7 +263,7 @@ export default function ModalFinish({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           id: idTranslateTest,
@@ -279,26 +273,26 @@ export default function ModalFinish({
 
       if (res.ok) {
         setSaved(false);
-        console.log("Test deleted successfully");
 
         // await handleUpdateTypingStats();
-      } else {
-        const data = await res.json();
-        console.error("Error saving test:", data.error || "Unknown error");
-      }
+      } 
+      // else {
+      //   const data = await res.json();
+        // console.error("Error saving test:", data.error || "Unknown error");
+      // }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // console.error("Error during fetch:", error);
     }
   };
 
   const handleSaveTranslationTest = async () => {
     if (!user) {
-      console.error("User is not available");
+      // console.error("User is not available");
       return;
     }
 
     if (!captchaValue) {
-      console.error("Captcha verification failed");
+      // console.error("Captcha verification failed");
       return;
     }
 
@@ -307,7 +301,7 @@ export default function ModalFinish({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           // user_id: user.id.toString(),
@@ -326,12 +320,13 @@ export default function ModalFinish({
         const data = await res.json();
         setIdTranslateTest(data.id);
         setSaved(true);
-      } else {
-        const data = await res.json();
-        console.error("Error saving test:", data.error || "Unknown error");
-      }
+      } 
+      // else {
+      //   const data = await res.json();
+        // console.error("Error saving test:", data.error || "Unknown error");
+      // }
     } catch (error) {
-      console.error("Error during fetch:", error);
+      // console.error("Error during fetch:", error);
     }
   };
 
@@ -383,7 +378,7 @@ export default function ModalFinish({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
         body: JSON.stringify({
           originalText: targetText,
@@ -408,7 +403,7 @@ export default function ModalFinish({
         "Ha ocurrido un problema al calcular la presición. Por favor intentelo más tarde.",
         "Un problème est survenu lors du calcul de la précision. Veuillez réessayer plus tard.",
       ]);
-      console.error("Error al calcular la precisión:", error);
+      // console.error("Error al calcular la precisión:", error);
     }
   };
 
@@ -419,15 +414,18 @@ export default function ModalFinish({
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          'X-Requested-With': 'fetch',
+          "X-Requested-With": "fetch",
         },
       });
 
-      
-      const data = await res.json();
-      setUser(data);
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+      }
+      // const data = await res.json();
+      // setUser(data);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     } finally {
       // const updateUserStats = async () => {
       //   if (typingTest) {
@@ -441,17 +439,25 @@ export default function ModalFinish({
   };
 
   useEffect(() => {
+    const calculateTranslationAccuracyAsync = async () => {
+      await calculateTranslationAccuracy(realText, userText);
+    };
     if (captchaValue) {
-      calculateTranslationAccuracy(realText, userText);
+      calculateTranslationAccuracyAsync();
     }
-  }, [captchaValue]);
+  }, [captchaValue, user]);
+
+  useEffect(() => {
+    const updateUserStats = async () => {
+      await handleUpdateTranslateStats();
+    };
+    updateUserStats();
+  }, [translationAccuracy]);
 
   useEffect(() => {
     const updateUserStats = async () => {
       if (typingTest) {
         await handleUpdateTypingStats();
-      } else {
-        await handleUpdateTranslateStats();
       }
     };
     updateUserStats();
@@ -471,7 +477,7 @@ export default function ModalFinish({
   }, []);
 
   if (loading) {
-    return <div style={{ position: "absolute", top: "50%" }}>Loading...</div>;
+    return <div style={{ position: "absolute", top: "50%", left: "50%" }}>Loading...</div>;
   }
 
   return (

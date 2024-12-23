@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import classes from "../styles/Account.module.css";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config/apiConfig";
+import { useTranslation } from "react-i18next";
 
 type User = {
   username: string;
@@ -15,7 +16,7 @@ type User = {
 export default function Account() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const { t } = useTranslation();
   const [typingTests, setTypingTests] = useState<any[]>([]);
   const [translationTests, setTranslationTests] = useState<any[]>([]);
   const navigate = useNavigate();
@@ -129,51 +130,51 @@ export default function Account() {
   }, []);
 
   if (loading) {
-    return <div style={{ position: "absolute", top: "50%" }}>Loading...</div>;
+    return <div style={{ position: "absolute", top: "50%", left: "50%"}}>Loading...</div>;
   }
 
   return (
     <main className={classes["main"]}>
       <h1 className={classes["welcome"]}>
-        Welcome, {user ? user.username : "User"}
+        {t("welcome")}, {user ? user.username : "User"}
       </h1>
       <p>
-        Total typing tests:{" "}
+        {t("total-typing-tests")}:{" "}
         {typingTests.length > Number(user?.total_typing_tests)
           ? typingTests.length
           : Number(user?.total_typing_tests)}
       </p>
-      <p>Typing average wpm: {Number(user?.avg_wpm)}</p>
+      <p>{t("typing-average-wpm")}: {Number(user?.avg_wpm)}</p>
       <p>
-        Typing Accuracy Average:{" "}
+        {t("typing-accuracy-average")}:{" "}
         {user?.avg_typing_accuracy !== null
           ? `${user?.avg_typing_accuracy}%`
           : "0%"}
       </p>
       <p>
-        Total translate tests:{" "}
+        {t("total-translate-tests")}:{" "}
         {translationTests.length > Number(user?.total_translate_tests)
           ? translationTests.length
           : Number(user?.total_translate_tests)}
       </p>
       <p>
-        Translation Accuracy Average: {Number(user?.avg_translate_accuracy)}%
+        {t("translation-accuracy-average")}: {Number(user?.avg_translate_accuracy)}%
       </p>
       <div className={classes["grid-container"]}>
         <article className={classes["tests-container"]}>
-          <p style={{ marginBottom: "10px" }}>Saved typing tests</p>
+          <p style={{ marginBottom: "10px" }}>{t("saved-typing-tests")}</p>
           <div className={classes["scrollable-container"]}>
             <ul className={classes["tests"]}>
               {typingTests.length > 0 ? (
                 typingTests.map((test, index) => (
                   <li key={index} className={classes["tests__li"]}>
                     <p className={classes["li__p"]}>
-                      Velocidad: {test.wpm} WPM
+                      WPM: {test.wpm}
                     </p>
-                    <p>Precisión: {test.accuracy}%</p>
-                    <p>Duración: {test.test_duration} [s]</p>
+                    <p>{t("accuracy")}: {test.accuracy}%</p>
+                    <p>{t("duration")}: {test.test_duration} [s]</p>
                     <p>
-                      Fecha: {new Date(test.test_date).toLocaleDateString()}
+                      {t("date")}: {new Date(test.test_date).toLocaleDateString()}
                     </p>
                   </li>
                 ))
@@ -184,20 +185,20 @@ export default function Account() {
           </div>
         </article>
         <article className={classes["tests-container"]}>
-          <p style={{ marginBottom: "10px" }}>Saved translate tests</p>
+          <p style={{ marginBottom: "10px" }}>{t("saved-translate-tests")}</p>
           <div className={classes["scrollable-container"]}>
             <ul className={classes["tests"]}>
               {translationTests.length > 0 ? (
                 translationTests.map((test) => (
                   <li key={test.id} className={classes["tests__li"]}>
-                    <p>Original Language: {test.language_from}</p>
-                    <p>Phrase: {test.phrase}</p>
-                    <p>Destination Language: {test.language_to}</p>
-                    <p>Translation: {test.user_translation}</p>
-                    <p>Accuracy {test.accuracy}%</p>
-                    <p>Duración: {test.test_duration} [s]</p>
+                    {/* <p>Original Language: {test.language_from}</p> */}
+                    <p translate="no">{t("phrase")}: {test.phrase}</p>
+                    <p>{t("destination-language")}: {test.language_to}</p>
+                    <p>{t("translation")}: {test.user_translation}</p>
+                    <p>{t("accuracy")} {test.accuracy}%</p>
+                    <p>{t("duration")}: {test.test_duration} [s]</p>
                     <p>
-                      Fecha: {new Date(test.test_date).toLocaleDateString()}
+                      {t("date")}: {new Date(test.test_date).toLocaleDateString()}
                     </p>
                   </li>
                 ))
@@ -209,7 +210,7 @@ export default function Account() {
         </article>
       </div>
       <button onClick={logout} className={classes["logout-btn"]}>
-        Log out
+        {t("log-out")}
       </button>
     </main>
   );

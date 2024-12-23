@@ -1,5 +1,6 @@
 .main {
   display: flex;
+  width: 100%;
   justify-content: start;
   align-items: center;
   flex-direction: column;
@@ -30,4 +31,14 @@
 .change-mode__btn:hover {
   background-color: gray;
   border-radius: 5px;
+}
+
+.github{
+  width: 50px;
+}
+
+@media (max-width: 769px){
+  .github{
+    opacity: 0;
+  }
 }

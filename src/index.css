@@ -33,6 +33,7 @@ body {
   background-color: #202124;
   height: 100lvh;
   overflow-x: hidden; 
+  width: 100%;
 }
 
 p {

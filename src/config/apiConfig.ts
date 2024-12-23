@@ -1,6 +1,6 @@
 const apiConfig = {
     development: "http://localhost:4000",
-    production: "https://translate-typing-backend-production.up.railway.app/",
+    production: "https://translate-typing-backend-production.up.railway.app",
   };
   
   const getApiUrl = (): string => {

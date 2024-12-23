@@ -2,17 +2,32 @@
   display: flex;
   align-items: center;
   padding: 10px 5px;
+  /* gap: 8px; */
 }
 
 .btn-modal {
-  background-color: #2d2e31;
+  background-color: transparent;
   color: #e7eae6;
   border: none;
   border-radius: 5px;
   display: flex;
-  justify-content: center; 
-  align-items: center;  
-  transition: color 200ms;  
+  justify-content: center;
+  align-items: center;
+  transition: color 200ms;
+  line-height: 1;
+  padding: 0 8px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  margin: 0; 
+}
+
+img {
+  display: block; 
+  width: 25px;
+  /* vertical-align: middle; */
 }
 
 .container-btn:hover {

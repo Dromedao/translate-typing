@@ -6,11 +6,35 @@ import Settings from "../assets/settings.svg";
 import Leaderboard from "../assets/leaderboard.svg";
 import Person from "../assets/person.svg";
 
+import ModalList from "./ModalList";
+// import { useState, useContext } from "react";
+
+// import unknownFlag from "../assets/unknown-flag.svg";
+import translate from "../assets/translate.svg";
+import { useLanguage } from "../LanguageContext";
+
 export default function NavBar({
   isAuthenticated,
 }: {
   isAuthenticated: boolean;
 }) {
+  const { setSelectedLanguage } = useLanguage();
+  const languages = [
+    "en",
+    "es",
+    "fr",
+    "ar",
+    "it",
+    "zh",
+    "ko",
+    "de",
+    "nl",
+    "tr",
+    "hi",
+    "pt",
+    "ja",
+    "ru",
+  ];
   return (
     <nav className={NavBarCss["nav-bar"]}>
       <Link
@@ -40,6 +64,17 @@ export default function NavBar({
           <Link to="/settings" className={NavBarCss["nav-bar__link"]}>
             <img src={Settings} alt="" />
           </Link>
+        </li>
+        <li>
+          <ModalList
+            // title={`${selectedLanguage}`}
+            title=""
+            items={languages}
+            setVar={setSelectedLanguage}
+            image={translate}
+            uniqueId="languageFrom"
+            changeLanguage={true}
+          />
         </li>
       </ul>
     </nav>

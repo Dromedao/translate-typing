@@ -1,6 +1,7 @@
 import { useState, useRef, ChangeEvent, Dispatch, SetStateAction } from "react";
 import TranslateModeCss from "../styles/TranslateMode.module.css";
 import ModalFinish from "./ModalFinish";
+import { useTranslation } from "react-i18next";
 
 type TranslationMode = {
   phrase: string;
@@ -20,7 +21,7 @@ export default function TranslationMode({
   setTimeStart,
 }: TranslationMode) {
   const [text, setText] = useState("");
-
+  const { t } = useTranslation();
   const [timeFinish, setTimeFinish] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [errorSendEmpty, setErrorSendEmpty] = useState(false);
@@ -81,11 +82,11 @@ export default function TranslationMode({
   return (
     <>
       <form onSubmit={handleSubmit} className={TranslateModeCss["main-form"]}>
-        <p className={TranslateModeCss["main-form__appointment"]}>«{phrase}»</p>
+        <p className={TranslateModeCss["main-form__appointment"]}>❝{phrase}❞</p>
         <textarea
           ref={textareaRef}
           className={TranslateModeCss["main-form__input"]}
-          placeholder="Write the translation"
+          placeholder={t("textarea-placeholder")}
           value={text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -101,9 +102,9 @@ export default function TranslationMode({
           onClick={handleButtonClick}
           className={TranslateModeCss["send-btn"]}
         >
-          Send
+          {t("send")}
         </button>
-        <p style={{ color: "grey" }}>You can also send with enter key</p>
+        <p style={{ textAlign:"center", color: "grey" }}>{t("send-message")}</p>
       </form>
       {showModal && (
         <ModalFinish

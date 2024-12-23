@@ -1,0 +1,33 @@
+export const languagesDiminutive = [
+  "en",
+  "es",
+  "fr",
+  "ar",
+  "it",
+  "zh",
+  "ko",
+  "de",
+  "nl",
+  "tr",
+  "hi",
+  "pt",
+  "ja",
+  "ru",
+];
+
+export const languages = [
+  "english",
+  "spanish",
+  "french",
+  "arabic",
+  "italian",
+  "chinese",
+  "korean",
+  "german",
+  "dutch",
+  "turkish",
+  "hindi",
+  "portuguese",
+  "japanese",
+  "russian",
+];

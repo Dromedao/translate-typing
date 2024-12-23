@@ -51,5 +51,10 @@
   .main-form__option-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    /* justify-items: center; */
+  }
+  .main-form__option-container > *:nth-child(2n+1):last-child {
+    grid-column: span 2;
+    /* justify-self: center; */
   }
 }

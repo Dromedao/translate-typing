@@ -63,7 +63,7 @@ export default function TypingMode({
 
   return (
     <>
-      <p className={TypingModeCss["main-form__appointment"]}>«{phrase}»</p>
+      <p className={TypingModeCss["main-form__appointment"]}>❝{phrase}❞</p>
       <div onClick={handleClickOutside} className={TypingModeCss["main-div"]}>
         <input
           ref={inputRef}
@@ -75,7 +75,7 @@ export default function TypingMode({
           onBlur={() => setIsFocused(false)}
           autoFocus
         />
-        <p className={TypingModeCss["text-output"]}>
+        <p translate="no" className={TypingModeCss["text-output"]}>
           {`${translatedPhrase} `.split("").map((char, index) => (
             <span
               key={index}
