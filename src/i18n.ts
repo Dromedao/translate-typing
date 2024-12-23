@@ -15,10 +15,9 @@ i18n
       escapeValue: false,
     },
     backend: {
-      loadPath: "/locales/{{lng}}/{{ns}}.json", // Ruta a tus archivos de traducción
+      loadPath: "/locales/{{lng}}/{{ns}}.json",
     },
     detection: {
-      // Configuración adicional para detectar el idioma del navegador/sistema
       order: [
         "querystring",
         "cookie",
@@ -29,8 +28,12 @@ i18n
         "path",
         "subdomain",
       ],
-      caches: ["localStorage", "cookie"], // Donde almacenar el idioma detectado
+      caches: ["localStorage", "cookie"],
     },
+  }, (err) => {
+    if (err) return console.error('i18next initialization failed');
+    console.log('i18next initialization successful');
   });
+
 
 export default i18n;

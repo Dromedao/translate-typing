@@ -8,18 +8,12 @@ import Settings from "./pages/Settings";
 import Account from "./pages/Account";
 
 import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n"; // Tu instancia configurada de i18next
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import { LanguageProvider } from "./LanguageContext"; // Importamos el provider
-
-interface LanguageContextType {
-  selectedLanguage: string;
-  setSelectedLanguage: Dispatch<SetStateAction<string>>;
-}
+import i18n from "./i18n"; 
+import { useEffect } from "react";
+import { LanguageProvider } from "./LanguageContext"; 
 
 function App() {
   useEffect(() => {
-    console.log("SE CAMBIO")
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 

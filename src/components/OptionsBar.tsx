@@ -56,9 +56,7 @@ export default function OptionsBar({
     if (errorFetchPhrase) {
       if (vars[0] in CannotFetchDatabase) {
         setVars[3](
-          CannotFetchDatabase[
-            vars[0] as keyof typeof CannotFetchDatabase
-          ]
+          CannotFetchDatabase[vars[0] as keyof typeof CannotFetchDatabase]
         );
       } else {
         setVars[3]("");
@@ -74,89 +72,146 @@ export default function OptionsBar({
     }
   }, [errorFetchPhrase]);
 
+  // const handleGeneratePhrase = async () => {
+  //   try {
+  //       if (!vars[0] || !vars[2]) {
+  //       console.error("Missing language or level!");
+  //       return;
+  //     }
+  //     const res = await fetch(`${API_URL}/multilingual-phrases/`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "X-Requested-With": "fetch",
+  //       },
+  //       body: JSON.stringify({
+  //         // language: vars[0],
+  //         language: vars[0],
+  //         level: vars[2],
+  //       }),
+  //       credentials: "include",
+  //     });
 
+  //     if (!res.ok) {
+  //       // Manejo de error de respuesta
+  //       const errorData = await res.json();
+  //       throw new Error(
+  //         `Error looking for a phrase: ${errorData.error || "Unknown error"}`
+  //       );
+  //     }
+
+  //     const data = await res.json();
+  //     const indexPhrase = Math.floor(Math.random() * data.length);
+  //     setVars[3](data[indexPhrase]?.phrase || "No phrase available");
+
+  //     if (typingMode) {
+  //       const res2 = await fetch(`${API_URL}/multilingual-phrases/`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "X-Requested-With": "fetch",
+  //         },
+  //         body: JSON.stringify({
+  //           language: vars[1],
+  //           level: vars[2],
+  //         }),
+  //         credentials: "include",
+  //       });
+
+  //       if (!res2.ok) {
+  //         // Manejo de error de respuesta para la segunda petición
+  //         const errorData2 = await res2.json();
+  //         throw new Error(
+  //           `Error looking for a phrase in typing mode: ${
+  //             errorData2.error || "Unknown error"
+  //           }`
+  //         );
+  //       }
+  //       const data2 = await res2.json();
+  //       setVars[4](data2[indexPhrase]?.phrase || "No phrase available");
+  //     } else {
+  //       //Translate Mode
+  //       if (setTranslateTimeStart) {
+  //         setTranslateTimeStart(Date.now());
+  //       }
+  //     }
+  //   } catch (error) {
+  //     // Manejo de errores generales (excepciones)
+  //     //language: vars[0],
+  //     //level: vars[2],
+  //     setErrorFetchPhrase(true);
+  //     // console.error("An error occurred:", error);
+  //   }
+  // };
   const handleGeneratePhrase = async () => {
     try {
-        if (!vars[0] || !vars[2]) {
-        console.error("Missing language or level!");
+      // Validación inicial
+      if (!vars[0] || !vars[2]) {
+        // console.error("Missing language or level!");
         return;
       }
-      const res = await fetch(`${API_URL}/multilingual-phrases/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "fetch",
-        },
-        body: JSON.stringify({
-          // language: vars[0],
-          language: vars[0],
-          level: vars[2],
-        }),
-        credentials: "include",
-      });
 
-      if (!res.ok) {
-        // Manejo de error de respuesta
-        const errorData = await res.json();
-        throw new Error(
-          `Error looking for a phrase: ${errorData.error || "Unknown error"}`
-        );
-      }
-
-      const data = await res.json();
-      const indexPhrase = Math.floor(Math.random() * data.length);
-      setVars[3](data[indexPhrase]?.phrase || "No phrase available");
-
-      if (typingMode) {
-        const res2 = await fetch(`${API_URL}/multilingual-phrases/`, {
+      const fetchPhrases = async (language: string, level: string) => {
+        const response = await fetch(`${API_URL}/multilingual-phrases/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "X-Requested-With": "fetch",
           },
-          body: JSON.stringify({
-            language: vars[1],
-            level: vars[2],
-          }),
+          body: JSON.stringify({ language, level }),
           credentials: "include",
         });
 
-        if (!res2.ok) {
-          // Manejo de error de respuesta para la segunda petición
-          const errorData2 = await res2.json();
+        if (!response.ok) {
+          const errorData = await response.json();
           throw new Error(
-            `Error looking for a phrase in typing mode: ${
-              errorData2.error || "Unknown error"
-            }`
+            `Error looking for a phrase: ${errorData.error || "Unknown error"}`
           );
         }
-        const data2 = await res2.json();
-        setVars[4](data2[indexPhrase]?.phrase || "No phrase available");
+
+        return response.json();
+      };
+
+      // Primera petición (siempre se ejecuta)
+      const firstLanguagePhrases = await fetchPhrases(vars[0], vars[2]);
+
+      // Seleccionar índice aleatorio una sola vez para mantener consistencia
+      const indexPhrase = Math.floor(
+        Math.random() * firstLanguagePhrases.length
+      );
+      setVars[3](
+        firstLanguagePhrases[indexPhrase]?.phrase || "No phrase available"
+      );
+
+      // Manejar los diferentes modos
+      if (typingMode) {
+        // En typing mode, hacemos la segunda petición para el segundo idioma
+        const secondLanguagePhrases = await fetchPhrases(vars[1], vars[2]);
+        setVars[4](
+          secondLanguagePhrases[indexPhrase]?.phrase || "No phrase available"
+        );
       } else {
-        //Translate Mode
+        // Translate Mode
         if (setTranslateTimeStart) {
           setTranslateTimeStart(Date.now());
         }
       }
     } catch (error) {
-      // Manejo de errores generales (excepciones)
-      //language: vars[0],
-      //level: vars[2],
       setErrorFetchPhrase(true);
       // console.error("An error occurred:", error);
     }
   };
 
-  useEffect(()=>{
-    setVars[0](convertToFullLanguage(selectedLanguage))
-    console.log(vars)
-  },[])
+  useEffect(() => {
+    console.log("SDADSAD", selectedLanguage)
+    setVars[0](convertToFullLanguage(selectedLanguage));
+  }, []);
 
   const exchangeLanguages = () => {
-    const aux = vars[0]
-    setVars[0](vars[1])
-    setVars[1](aux)
-  }
+    const aux = vars[0];
+    setVars[0](vars[1]);
+    setVars[1](aux);
+  };
 
   return (
     <div className={OptionsBarCss["main-form__option-container"]}>
@@ -186,9 +241,11 @@ export default function OptionsBar({
           <label htmlFor="">
             <img src={Sync} alt="Sync icon" />
             <button
-            className={OptionsBarCss["main-form__generate-button"]}
-            onClick={exchangeLanguages}
-            >{t("change-direction")}</button>
+              className={OptionsBarCss["main-form__generate-button"]}
+              onClick={exchangeLanguages}
+            >
+              {t("change-direction")}
+            </button>
           </label>
         </>
       ) : (

@@ -1,28 +1,39 @@
-import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
-import i18n from 'i18next'; // Importa i18n
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from "react";
+import i18n from "i18next"; // Importa i18n
 
 interface LanguageContextType {
   selectedLanguage: string;
   setSelectedLanguage: Dispatch<SetStateAction<string>>;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>(
+  undefined
+);
 
-export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language || 'en'); // Inicializa con el idioma detectado por i18n
+export const LanguageProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    i18n.language.length === 2 ? i18n.language : i18n.language.slice(0, 2) || "en" 
+  );
 
   useEffect(() => {
-    // Actualiza el selectedLanguage si cambia el idioma de i18next
     const handleLanguageChange = (lng: string) => {
-      setSelectedLanguage(lng);
+      const normalizedLanguage = lng.length === 2 ? lng : lng.split("-")[0]; 
+      setSelectedLanguage(normalizedLanguage);
     };
 
-    // Añadir un listener a cambios de idioma
-    i18n.on('languageChanged', handleLanguageChange);
-
-    // Limpia el listener cuando el componente se desmonte
+    i18n.on("languageChanged", handleLanguageChange);
     return () => {
-      i18n.off('languageChanged', handleLanguageChange);
+      i18n.off("languageChanged", handleLanguageChange);
     };
   }, []);
 
@@ -36,7 +47,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    throw new Error("useLanguage must be used within a LanguageProvider");
   }
   return context;
 };

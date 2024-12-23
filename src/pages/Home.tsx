@@ -31,10 +31,12 @@ export default function Home() {
   );
 
   const [selectedLanguageFrom, setSelectedLanguageFrom] = useState("english");
-  const [selectedLanguageTo, setSelectedLanguageTo] = useState("spanish");
+  const [selectedLanguageTo, setSelectedLanguageTo] = useState("english");
   const [selectedLevel, setSelectedLevel] = useState("A1");
 
-  const { t, i18n } = useTranslation();
+  const { t, 
+    i18n
+   } = useTranslation();
 
   const [phrase, setPhrase] = useState(t("click-to-generate"));
   const [translatedPhrase, setTranslatedPhrase] = useState(
@@ -43,10 +45,11 @@ export default function Home() {
   const [clickPhase, setClickPhase] = useState(true);
 
   useEffect(() => {
-    if (i18n.language === "es") {
-      setSelectedLanguageTo("english");
+    if (i18n.language.slice(0,2) === "en") {
+      setSelectedLanguageTo("spanish");
     }
   }, []);
+  
 
   useEffect(() => {
     if (clickPhase) {
@@ -60,7 +63,7 @@ export default function Home() {
       if (typeof DefaultPhrases[selectedLanguageTo as Language] === "string") {
         setTranslatedPhrase(DefaultPhrases[selectedLanguageTo as Language]);
       } else {
-        console.error("Translation not found for", selectedLanguageTo);
+        // console.error("Translation not found for", selectedLanguageTo);
       }
     }
   }, [clickPhase, selectedLanguageTo]);
