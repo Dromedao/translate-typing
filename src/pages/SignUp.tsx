@@ -109,7 +109,7 @@ export default function SignUp() {
             type="password"
             placeholder={t("password-placeholder")}
             minLength={6}
-            maxLength={20}
+            maxLength={64}
             value={formData.password}
             onChange={handleChange}
           />
@@ -121,7 +121,7 @@ export default function SignUp() {
             type="password"
             placeholder={t("password-placeholder")}
             minLength={6}
-            maxLength={20}
+            maxLength={64}
             value={formData.confirmPassword}
             onChange={handleChange}
           />
