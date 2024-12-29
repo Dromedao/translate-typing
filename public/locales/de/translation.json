@@ -38,6 +38,9 @@
     "coming-soon": "Kommt bald...",
     "settings": "Einstellungen",
     "click-to-generate": "Klicken Sie auf die Schaltfläche, um einen neuen Satz zu generieren",
-    "change-direction": "Richtung ändern"
+    "change-direction": "Richtung ändern",
+    "new-verify-email": "Benötigen Sie eine neue Bestätigungs-E-Mail?",
+    "click-verify-email": "Klicken Sie hier, um eine neue zu senden",
+    "send-new-verify-email": "Senden Sie eine neue Bestätigungs-E-Mail"
   }
   

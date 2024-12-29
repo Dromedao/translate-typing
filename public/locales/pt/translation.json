@@ -38,6 +38,9 @@
     "coming-soon": "Em breve...",
     "settings": "Configurações",
     "click-to-generate": "Clique no botão para gerar uma nova frase",
-    "change-direction": "Mudar direção"
+    "change-direction": "Mudar direção",
+    "new-verify-email": "Você precisa de um novo e-mail de verificação?",
+    "click-verify-email": "Clique aqui para enviar um novo",
+    "send-new-verify-email": "Enviar um novo e-mail de verificação"
   }
   

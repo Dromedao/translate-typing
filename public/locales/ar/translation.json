@@ -38,6 +38,9 @@
     "coming-soon": "Qariban...",
     "settings": "Adadad",
     "click-to-generate": "Iḍġāṭ ʿalā al-zirr liʾinshāʾ ʿibārā jadīdah",
-    "change-direction": "Taghyir al-ittijah"
+    "change-direction": "Taghyir al-ittijah",
+    "new-verify-email": "Hal tahtaj ila taqdeem barid tawthiq jadid?",
+    "click-verify-email": "Iklik huna li'irsal jadid",
+    "send-new-verify-email": "Irsal jadid li'irsal e-mail tawthiq jadid"
   }
   

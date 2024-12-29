@@ -66,7 +66,7 @@ export default function SignUp() {
         setErrorMessage(data.error || "An error occurred");
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      // console.error("Error during registration:", error);
       setErrorMessage("Failed to register. Please try again later.");
     }
   };
@@ -96,7 +96,7 @@ export default function SignUp() {
             type="email"
             placeholder="Email"
             minLength={5}
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@[a-zA-Z0-9_][\-a-zA-Z0-9_]*(\.[\-a-zA-Z0-9_]+)*\.[cC][oO][mM](:[0-9]{1,5})?"
             value={formData.email}
             onChange={handleChange}
           />

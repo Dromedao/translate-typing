@@ -2,6 +2,7 @@
   "name": "that-i-played-recently",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://translatetyping.com",
   "type": "module",
   "scripts": {
     "dev": "vite",

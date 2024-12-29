@@ -38,6 +38,9 @@
     "coming-soon": "Komt binnenkort...",
     "settings": "Instellingen",
     "click-to-generate": "Klik op de knop om een nieuwe zin te genereren",
-    "change-direction": "Richting veranderen"
+    "change-direction": "Richting veranderen",
+    "new-verify-email": "Heeft u een nieuwe verificatie-e-mail nodig?",
+    "click-verify-email": "Klik hier om een nieuwe te verzenden",
+    "send-new-verify-email": "Stuur een nieuwe verificatie-e-mail"
   }
   

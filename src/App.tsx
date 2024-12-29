@@ -6,11 +6,12 @@ import Home from "./pages/Home";
 import Leaderboard from "./pages/Leaderboard";
 import Settings from "./pages/Settings";
 import Account from "./pages/Account";
+import { VerifyEmail } from "./pages/VerifyEmail";
 
 import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n"; 
+import i18n from "./i18n";
 import { useEffect } from "react";
-import { LanguageProvider } from "./LanguageContext"; 
+import { LanguageProvider } from "./LanguageContext";
 
 function App() {
   useEffect(() => {
@@ -28,6 +29,7 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/verify-email" element={<VerifyEmail/>} />
           </Route>
         </Routes>
       </LanguageProvider>

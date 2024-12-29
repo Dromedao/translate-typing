@@ -38,6 +38,9 @@
     "coming-soon": "Mou sugu kuru...",
     "settings": "Settei",
     "click-to-generate": "Botan o kurikku shite atarashī bunshō o seisei shimasu",
-    "change-direction": "Hōkō o kaeru"
+    "change-direction": "Hōkō o kaeru",
+    "new-verify-email": "Atarashī kakunin mēru ga hitsuyōdesu ka?",
+    "click-verify-email": "Koko o kurikku shite atarashī no o okutte kudasai",
+    "send-new-verify-email": "Atarashī kakunin mēru o okutte kudasai"
   }
   

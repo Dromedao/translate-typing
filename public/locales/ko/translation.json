@@ -38,6 +38,9 @@
     "coming-soon": "Gima yeongjang",
     "settings": "Seetting",
     "click-to-generate": "beotoneul keullikhaeseo saeroun munjang-eul saengseonghasibsio",
-    "change-direction": "Banghyang-eul bakkuda"
+    "change-direction": "Banghyang-eul bakkuda",
+    "new-verify-email": "Saeroun hwagin imeil-i pil-yohasimnikka?",
+    "click-verify-email": "Yeogi clickhaeseo saeroun imeil-eul bonaeseyo",
+    "send-new-verify-email": "Saeroun imeil-eul bonaeseyo"
   }
   

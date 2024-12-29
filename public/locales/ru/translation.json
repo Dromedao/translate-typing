@@ -38,6 +38,9 @@
     "coming-soon": "Skoro budet...",
     "settings": "Nastroiki",
     "click-to-generate": "Nazhmi na knopku, chtoby sgenirovat' novuyu frazu",
-    "change-direction": "Izmenit' napravlenie"
+    "change-direction": "Izmenit' napravlenie",
+    "new-verify-email": "Vam nuzhna novaya verifikatsionnaya elektronnaya pochta?",
+    "click-verify-email": "Nazhmi zdes', chtoby otpravit' novuyu",
+    "send-new-verify-email": "Otpravit' novoye pismo dlya podtverzhdeniya"
   }
   

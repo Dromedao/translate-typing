@@ -38,6 +38,9 @@
     "coming-soon": "Yakında...",
     "settings": "Ayarlar",
     "click-to-generate": "Yeni bir cümle oluşturmak için düğmeye tıklayın",
-    "change-direction": "Yönü değiştir"
+    "change-direction": "Yönü değiştir",
+    "new-verify-email": "Yeni bir doğrulama e-postasına mı ihtiyacınız var?",
+    "click-verify-email": "Buraya tıklayarak yenisini gönderin",
+    "send-new-verify-email": "Yeni bir doğrulama e-postası gönder"
   }
   
